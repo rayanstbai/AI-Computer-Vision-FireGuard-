@@ -1,0 +1,10 @@
+# --- Core Inference Logic ---
+ultralytics
+opencv-python
+numpy
+torch
+torchvision
+
+# --- Data Analysis & Visualization (Optional/Notebooks) ---
+pandas
+matplotlib
