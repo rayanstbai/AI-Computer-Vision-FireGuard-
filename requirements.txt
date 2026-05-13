@@ -5,6 +5,9 @@ numpy
 torch
 torchvision
 
+# --- Enterprise Web Dashboard ---
+flask
+
 # --- Data Analysis & Visualization (Optional/Notebooks) ---
 pandas
 matplotlib

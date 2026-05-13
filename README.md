@@ -8,6 +8,11 @@ specifically introducing an "Other" class to actively filter out environmental n
 the inference pipeline features a custom **Temporal Smoothing** algorithm. By evaluating a rolling history of the last 10 frames, 
 the system mathematically suppresses false positives and UI flickering, only triggering an alarm when a threat is temporally consistent.
 
+**Enterprise Web Dashboard Deployment:**
+To bridge the gap between edge inference and end-user accessibility, a lightweight web dashboard was engineered using Flask. The Python backend operates as a generator, 
+encoding processed frames into a network stream and decoupling the YOLOv8 engine from heavy local GUI libraries. 
+The dashboard features a live video feed alongside a real-time, asynchronous telemetry log terminal for comprehensive situational awareness.
+
 2. Repository Structure
 ```text
 FireGuard/
@@ -19,8 +24,10 @@ FireGuard/
 │   ├── FireGuard_2nd_dataset.ipynb              # Phase 2 training (Stacked dataset)
 │   └── FireGuard_Cloud_Base_Training_DFire.ipynb # Phase 1 training (Baseline)
 ├── src/
-│   └── detect.py                                # Main inference script with temporal smoothing
-├── venv/                                        # Python virtual environment
+│   └── detect_web.py                            # AI inference engine & video frame generator
+├── templates/
+│   └── index.html                               # Enterprise SOC web dashboard UI
+├── app.py                                       # Flask web server and routing logic
 ├── README.md
 └── requirements.txt
 ```
@@ -34,7 +41,7 @@ A local webcam or a mobile device running DroidCam for IP network streaming.
 Installation:
 
 Clone this repository to your local machine:
-git clone [https://github.com/YOUR_USERNAME/FireGuard.git](https://github.com/YOUR_USERNAME/FireGuard.git)
+git clone [https://github.com/RayanSalmanUSJ/FireGuard.git](https://github.com/RayanSalmanUSJ/FireGuard.git)
 cd FireGuard
 
 Create and activate a virtual environment:
@@ -50,15 +57,20 @@ The system is designed to run locally, pulling a video stream and processing it 
 Ensure your camera is active. By default, the script is configured to pull a raw HTTP video stream from a local network device (e.g., DroidCam).
 Execute the detection script from the root directory:
 
-python src/detect.py
+python app.py
+
+to view, CTRL + click on the link to view the live feed with detections fromt the terminal output right after executing the command python app.py
+
+CTRL + C on terminal to safely shut down.
 
 Configuring the Camera Feed:
 If you need to change the video source, open src/detect.py and modify the cv2.VideoCapture() initialization:
 
 For IP Camera / DroidCam (Default):
-cap = cv2.VideoCapture('[http://127.0.0.1:4747/video](http://127.0.0.1:4747/video)') 
+cap = cv2.VideoCapture('http://[DeviceIP]:[DroidCamPort]/video')
+Replace DeviceIP with your device IP. Ensure the port matches your DroidCam configuration.
 For a built-in laptop webcam:
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 
 Viewing the Output:
 Once running, a UI window will appear displaying the real-time feed, the current FPS, and the dynamic temporal bounding boxes (Yellow for unconfirmed anomalies, 
